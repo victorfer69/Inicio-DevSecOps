@@ -107,6 +107,13 @@ mostrar_record(){
     echo "----------------------------"
 }
 
+borrar_record(){
+    echo 0 > $ruta_record
+    echo "-------------------------------------"
+    echo "Se ha borrado correctamente el récord"
+    echo "-------------------------------------"
+}
+
 # Mensaje de bienvenida
 echo "-----------------------------"
 echo "Bienvenido al juego de trivia"
@@ -118,7 +125,8 @@ while [ "$decision" != "4" ]; do
     echo "1 - Iniciar juego"
     echo "2 - Ver instrucciones"
     echo "3 - Mostrar récord"
-    echo "4 - Salir"
+    echo "4 - Borrar récord"
+    echo "5 - Salir"
     echo "Opción: "
     read decision
 
@@ -126,7 +134,8 @@ while [ "$decision" != "4" ]; do
         1) iniciar_juego ;;
         2) mostrar_instrucciones ;;
         3) mostrar_record ;;
-        4) 
+        4) borrar_record ;;
+        5) 
             echo "---------------------"
             echo "¡Fin del juego!"
             echo "Puntaje final: $puntos / 3"
