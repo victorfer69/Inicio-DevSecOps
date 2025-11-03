@@ -1,3 +1,5 @@
+package Inicio;
+
 public class tipos {
     public static void main(String[] args) {
         
