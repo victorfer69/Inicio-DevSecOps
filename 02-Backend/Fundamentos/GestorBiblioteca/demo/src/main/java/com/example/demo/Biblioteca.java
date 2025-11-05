@@ -34,10 +34,54 @@ public class Biblioteca {
             System.out.println("Esta vacio.");
         }
     }
-    public void buscarLibroISBN(ArrayList<Libro> libros){}
-    public void actualizarLibro(ArrayList<Libro> libros){}
-    public void eliminarLibro(ArrayList<Libro> libros){}
-    public void marcarLibroPresDev(ArrayList<Libro> libros){}
+    public Libro buscarLibroISBN(String isbn){
+        ArrayList<Libro> libros = getLibros();
+        if(!estaVacio()) {
+            for (int i = 0; i < libros.size(); i++){
+                if(libros.get(i).getIsbn().equals(isbn)){
+                    return libros.get(i);
+                }
+            }
+        }
+        return null;
+    }
+    public void actualizarLibro(String isbnViejo, String isbnNuevo){
+        Libro libro = buscarLibroISBN(isbnViejo);
+        if(libro != null){
+            try{
+                libro.setIsbn(isbnNuevo);
+                System.out.println("ISBN actualizado con exito");
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+        }else{
+            System.out.println("No se ha encontrado el libro con ISBN: " + isbnViejo + ".");
+        }
+    }
+    public void eliminarLibro(String isbn){
+        Libro libro = buscarLibroISBN(isbn);
+        if(libro != null){
+            ArrayList<Libro> libros = getLibros();
+            libros.remove(libro);
+            System.out.println("Libro eliminado con exito.");
+        }else{
+            System.out.println("No se ha encontrado el libro con ISBN: " + isbn + ".");
+        }
+    }
+    public void marcarLibroPresDev(String isbn){
+        Libro libro = buscarLibroISBN(isbn);
+        if(libro != null){
+            if(libro.isDisponible()){
+                libro.setDisponible(false);
+                System.out.println("El libro ahora esta prestado.");
+            }else{
+                libro.setDisponible(true);
+                System.out.println("El libro ahora esta disponible.");
+            }
+        }else{
+            System.out.println("No se ha encontrado el libro con ISBN: " + isbn + ".");
+        }
+    }
     public boolean comprobarIsbnUnico(Libro libro){
 
         ArrayList<Libro> libros = getLibros();
