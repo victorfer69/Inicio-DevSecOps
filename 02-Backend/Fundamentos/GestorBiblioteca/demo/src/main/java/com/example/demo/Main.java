@@ -2,6 +2,12 @@ package com.example.demo;
 
 import java.util.Scanner;
 
+/**
+ * Clase que representa un ejemplo de uso de la biblioteca
+ * Tiene distintas acciones dentro de la biblioteca
+ * @author victorfer69
+ * @version 1.0
+ */
 public class Main {
     public static void main(String[] args) {
 
