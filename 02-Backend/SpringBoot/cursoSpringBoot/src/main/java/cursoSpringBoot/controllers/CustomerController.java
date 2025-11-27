@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
+@RequestMapping(path = "/clientes")
 public class CustomerController {
 
     private List<Customer> customers = new ArrayList<>(Arrays.asList(
@@ -17,12 +18,14 @@ public class CustomerController {
             new Customer(234, "Carlos Martinez", "carlosm", "contrasena234")
     ));
 
-    @GetMapping(path = "/clientes")
+    @RequestMapping(method = RequestMethod.GET)
+    // @GetMapping
     public List<Customer> getCustomers(){
         return customers;
     }
 
-    @GetMapping(path = "/clientes/{name}")
+    @RequestMapping(value = "/{name}", method = RequestMethod.GET)
+    // @GetMapping(path = "/{name}")
     public Customer getCustomer(@PathVariable String name){
         for(int i = 0; i < customers.size(); i++){
             if(customers.get(i).getUsername().equals(name)){
@@ -32,13 +35,15 @@ public class CustomerController {
         return null;
     }
 
-    @PostMapping(path = "/clientes")
+    @RequestMapping(method = RequestMethod.POST)
+    // @PostMapping
     public Customer postCliente(@RequestBody Customer customer){
         customers.add(customer);
         return customer;
     }
 
-    @PutMapping(path = "/clientes")
+    @RequestMapping(method = RequestMethod.PUT)
+    // @PutMapping
     public Customer putCliente(@RequestBody Customer customer){
         for(Customer c : customers){
             if (c.getID() == customer.getID()){
@@ -51,11 +56,32 @@ public class CustomerController {
         return null;
     }
 
-    @DeleteMapping(path = "/clientes/{id}")
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    // @DeleteMapping(path = "/{id}")
     public Customer deleteCliente(@PathVariable int id){
         for(Customer c : customers){
             if (c.getID() == id){
                 customers.remove(c);
+                return c;
+            }
+        }
+        return null;
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH)
+    // @PatchMapping
+    public Customer patchCliente(@RequestBody Customer customer) {
+        for (Customer c : customers) {
+            if (c.getID() == customer.getID()) {
+                if (customer.getName() != null) {
+                    c.setName(customer.getName());
+                }
+                if (customer.getUsername() != null) {
+                    c.setUsername(customer.getUsername());
+                }
+                if (customer.getPassword() != null) {
+                    c.setPassword(customer.getPassword());
+                }
                 return c;
             }
         }
