@@ -1,6 +1,8 @@
 package cursoSpringBoot.controllers;
 
 import cursoSpringBoot.domain.Customer;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,57 +22,67 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.GET)
     // @GetMapping
-    public List<Customer> getCustomers(){
-        return customers;
+    public ResponseEntity<List<Customer>> getCustomers(){
+        return ResponseEntity.ok(customers);
+        // return customers;
     }
 
     @RequestMapping(value = "/{name}", method = RequestMethod.GET)
     // @GetMapping(path = "/{name}")
-    public Customer getCustomer(@PathVariable String name){
+    public ResponseEntity<?> getCustomer(@PathVariable String name){
         for(int i = 0; i < customers.size(); i++){
             if(customers.get(i).getUsername().equals(name)){
-                return customers.get(i);
+                return ResponseEntity.ok(customers.get(i));
+                //return customers.get(i);
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado con el nombre: " + name);
+        //return null;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     // @PostMapping
-    public Customer postCliente(@RequestBody Customer customer){
+    public ResponseEntity<?> postCliente(@RequestBody Customer customer){
         customers.add(customer);
-        return customer;
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Cliente creado exitosamente: " + customer.getUsername());
+        //return customer;
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     // @PutMapping
-    public Customer putCliente(@RequestBody Customer customer){
+    public ResponseEntity<?> putCliente(@RequestBody Customer customer){
         for(Customer c : customers){
             if (c.getID() == customer.getID()){
                 c.setName(customer.getName());
                 c.setUsername(customer.getUsername());
                 c.setPassword(customer.getPassword());
-                return customer;
+
+                return ResponseEntity.ok("Cliente modificado correctamente: " + customer.getID());
+                //return customer;
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado: " + customer.getID());
+        //return null;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     // @DeleteMapping(path = "/{id}")
-    public Customer deleteCliente(@PathVariable int id){
+    public ResponseEntity<?> deleteCliente(@PathVariable int id){
         for(Customer c : customers){
             if (c.getID() == id){
                 customers.remove(c);
-                return c;
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cliente eliminado: " + c.getID());
+                //return c;
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado: " + id);
+        //return null;
     }
 
     @RequestMapping(method = RequestMethod.PATCH)
     // @PatchMapping
-    public Customer patchCliente(@RequestBody Customer customer) {
+    public ResponseEntity<?> patchCliente(@RequestBody Customer customer) {
         for (Customer c : customers) {
             if (c.getID() == customer.getID()) {
                 if (customer.getName() != null) {
@@ -82,10 +94,13 @@ public class CustomerController {
                 if (customer.getPassword() != null) {
                     c.setPassword(customer.getPassword());
                 }
-                return c;
+
+                return ResponseEntity.ok("Cliente modificado: " + c.getUsername());
+                //return c;
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado: " + customer.getID());
+        //return null;
     }
 
 }
