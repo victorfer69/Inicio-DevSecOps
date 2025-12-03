@@ -4,7 +4,9 @@ import cursoSpringBoot.domain.Customer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +47,15 @@ public class CustomerController {
     public ResponseEntity<?> postCliente(@RequestBody Customer customer){
         customers.add(customer);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Cliente creado exitosamente: " + customer.getUsername());
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{name}")
+                .buildAndExpand(customer.getUsername())
+                .toUri();
+
+        return ResponseEntity.created(location).body(customer);
+        //return ResponseEntity.created(location).build();
+        //return ResponseEntity.status(HttpStatus.CREATED).body("Cliente creado exitosamente: " + customer.getUsername());
         //return customer;
     }
 
@@ -58,11 +68,14 @@ public class CustomerController {
                 c.setUsername(customer.getUsername());
                 c.setPassword(customer.getPassword());
 
-                return ResponseEntity.ok("Cliente modificado correctamente: " + customer.getID());
+                return ResponseEntity.noContent().build();
+                //return ResponseEntity.ok("Cliente modificado correctamente: " + customer.getID());
                 //return customer;
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado: " + customer.getID());
+
+        return ResponseEntity.notFound().build();
+        //return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado: " + customer.getID());
         //return null;
     }
 
@@ -72,11 +85,15 @@ public class CustomerController {
         for(Customer c : customers){
             if (c.getID() == id){
                 customers.remove(c);
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cliente eliminado: " + c.getID());
+
+                return ResponseEntity.noContent().build();
+                //return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cliente eliminado: " + c.getID());
                 //return c;
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado: " + id);
+
+        return ResponseEntity.notFound().build();
+        //return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado: " + id);
         //return null;
     }
 
